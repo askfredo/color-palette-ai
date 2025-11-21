@@ -80,7 +80,7 @@ class Server {
 
   private setupRoutes(): void {
     // Health check
-    this.app.get('/', (req, res) => {
+    this.app.get('/', (_req, res) => {
       res.json({
         success: true,
         message: 'Color Palette AI API',

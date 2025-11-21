@@ -9,7 +9,7 @@ const upload = multer({
   limits: {
     fileSize: parseInt(process.env.MAX_FILE_SIZE || '5242880', 10) // 5MB default
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     // Accept only image files
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);

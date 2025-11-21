@@ -27,7 +27,7 @@ export class ColorController {
         res.status(400).json({
           success: false,
           error: 'Validation failed',
-          details: errors.array()
+          details: JSON.stringify(errors.array())
         } as ErrorResponse);
         return;
       }
@@ -123,7 +123,7 @@ export class ColorController {
         res.status(400).json({
           success: false,
           error: 'Validation failed',
-          details: errors.array()
+          details: JSON.stringify(errors.array())
         } as ErrorResponse);
         return;
       }
@@ -184,7 +184,7 @@ export class ColorController {
    * GET /api/colors/health
    * Health check endpoint
    */
-  healthCheck = async (req: Request, res: Response): Promise<void> => {
+  healthCheck = async (_req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       success: true,
       message: 'Color Palette AI API is running',

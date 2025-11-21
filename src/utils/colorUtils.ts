@@ -1,4 +1,4 @@
-import { RGB, HSL, ColorInfo, ColorVariation, ColorVariations } from '../types';
+import { RGB, HSL, ColorInfo, ColorVariations } from '../types';
 
 /**
  * Normalize hex color string
