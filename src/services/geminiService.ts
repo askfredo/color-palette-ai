@@ -32,50 +32,50 @@ export class GeminiService {
    * A. Generate color from natural language description
    */
   async generateColorFromDescription(description: string): Promise<AIColorDescriptionResponse> {
-    const prompt = `Eres un experto en teoría del color y diseño. El usuario describe un color de forma natural.
+    const prompt = `You are an expert in color theory and design. The user describes a color naturally.
 
-Descripción del usuario: "${description}"
+User description: "${description}"
 
-Tu tarea es interpretar esta descripción y generar un color HEX preciso.
+Your task is to interpret this description and generate a precise HEX color.
 
-IMPORTANTE: Responde ÚNICAMENTE con un objeto JSON válido en este formato exacto:
+IMPORTANT: Respond ONLY with a valid JSON object in this exact format:
 {
   "hex": "#RRGGBB",
-  "description": "Breve explicación del color generado y por qué se ajusta a la descripción",
+  "description": "Brief explanation of the generated color and why it fits the description",
   "confidence": 0.95
 }
 
-Reglas:
-- El hex debe ser válido (formato #RRGGBB)
-- La confianza debe estar entre 0 y 1
-- La descripción debe ser concisa (máximo 2 oraciones)
-- NO incluyas texto adicional fuera del JSON
-- NO uses markdown, solo JSON puro
+Rules:
+- The hex must be valid (format #RRGGBB)
+- Confidence must be between 0 and 1
+- The description must be concise (maximum 2 sentences)
+- DO NOT include any additional text outside the JSON
+- DO NOT use markdown, just pure JSON
 
-Ejemplos de descripciones y respuestas:
+Examples of descriptions and responses:
 
-Usuario: "Un verde menta más suave pero con tono pastel"
+User: "A softer mint green but with pastel tone"
 {
   "hex": "#B4E7CE",
-  "description": "Verde menta suave con tonos pastel, refrescante y delicado. Combina la frescura del menta con la suavidad de los pasteles.",
+  "description": "Soft mint green with pastel tones, refreshing and delicate. Combines the freshness of mint with the softness of pastels.",
   "confidence": 0.92
 }
 
-Usuario: "Un rojo Ferrari pero un poco más oscuro"
+User: "A Ferrari red but slightly darker"
 {
   "hex": "#B80000",
-  "description": "Rojo Ferrari profundo y oscurecido, mantiene la intensidad característica pero con mayor profundidad. Perfecto para transmitir lujo y potencia.",
+  "description": "Deep, darkened Ferrari red, maintains the characteristic intensity but with greater depth. Perfect for conveying luxury and power.",
   "confidence": 0.88
 }
 
-Usuario: "Color que se sienta como 'amanecer cálido en la playa'"
+User: "Color that feels like 'warm sunrise at the beach'"
 {
   "hex": "#FFB366",
-  "description": "Naranja dorado cálido que evoca los primeros rayos del sol sobre el mar. Combina calidez, serenidad y el optimismo de un nuevo día.",
+  "description": "Warm golden orange that evokes the first rays of sun over the sea. Combines warmth, serenity and the optimism of a new day.",
   "confidence": 0.85
 }
 
-Ahora genera tu respuesta:`;
+Now generate your response:`;
 
     try {
       const result = await this.model.generateContent(prompt);
@@ -109,7 +109,7 @@ Ahora genera tu respuesta:`;
         success: true,
         color: colorInfo,
         variations,
-        description: parsed.description || 'Color generado por IA',
+        description: parsed.description || 'AI generated color',
         confidence: parsed.confidence || 0.8
       };
     } catch (error) {
@@ -131,24 +131,24 @@ Ahora genera tu respuesta:`;
     const mimeType = 'image/jpeg'; // Adjust based on actual image type
 
     const modeDescriptions: Record<PaletteMode, string> = {
-      pastel: 'suaves, delicados, con alta luminosidad y baja saturación',
-      vibrant: 'vibrantes, saturados, llamativos y energéticos',
-      vintage: 'retro, apagados, con tonos sepia o desaturados',
-      minimal: 'minimalistas, neutros, con paleta reducida',
-      flat: 'planos, modernos, típicos del diseño flat (Material Design)',
-      'web-safe': 'web-safe, compatibles con todos los navegadores'
+      pastel: 'soft, delicate colors with high brightness and low saturation',
+      vibrant: 'vibrant, saturated, striking and energetic colors',
+      vintage: 'retro, muted colors with sepia or desaturated tones',
+      minimal: 'minimalist, neutral colors with reduced palette',
+      flat: 'flat, modern colors typical of flat design (Material Design)',
+      'web-safe': 'web-safe colors compatible with all browsers'
     };
 
-    const prompt = `Analiza esta imagen y extrae una paleta de colores ${modeDescriptions[mode]}.
+    const prompt = `Analyze this image and extract a color palette of ${modeDescriptions[mode]}.
 
-Debes identificar:
-1. El color DOMINANTE (el más presente o importante)
-2. ${colorCount - 1} colores SECUNDARIOS/ACENTOS que complementen la paleta
+You must identify:
+1. The DOMINANT color (the most present or important)
+2. ${colorCount - 1} SECONDARY/ACCENT colors that complement the palette
 
-Modo solicitado: ${mode}
-Cantidad de colores: ${colorCount}
+Requested mode: ${mode}
+Number of colors: ${colorCount}
 
-IMPORTANTE: Responde ÚNICAMENTE con un objeto JSON válido en este formato exacto:
+IMPORTANT: Respond ONLY with a valid JSON object in this exact format:
 {
   "palette": [
     {
@@ -169,14 +169,14 @@ IMPORTANTE: Responde ÚNICAMENTE con un objeto JSON válido en este formato exac
   ]
 }
 
-Reglas:
-- Los colores deben seguir el modo "${mode}" especificado
-- Los porcentajes deben sumar aproximadamente 100
-- Exactamente UN color debe tener role: "dominant"
-- El resto puede ser "secondary" o "accent"
-- Ordena por porcentaje descendente
-- NO incluyas texto adicional fuera del JSON
-- NO uses markdown, solo JSON puro`;
+Rules:
+- Colors must follow the specified "${mode}" mode
+- Percentages should add up to approximately 100
+- Exactly ONE color must have role: "dominant"
+- The rest can be "secondary" or "accent"
+- Order by percentage descending
+- DO NOT include any additional text outside the JSON
+- DO NOT use markdown, just pure JSON`;
 
     try {
       const imagePart = {
@@ -242,59 +242,59 @@ Reglas:
     count: number = 3
   ): Promise<StyleRecommendationResponse> {
     const styleDescriptions: Record<StyleType, string> = {
-      professional: 'corporativa, seria, confiable. Usa azules, grises, blancos.',
-      luxury: 'lujosa, elegante, premium. Usa negros, dorados, plateados, púrpuras profundos.',
-      retro: 'videojuego retro, 8-bit, nostálgica. Usa colores saturados típicos de los 80s-90s.',
-      kawaii: 'tierna, dulce, juvenil. Usa rosas, pasteles, colores suaves.',
-      complementary: 'complementaria (colores opuestos en la rueda de color)',
-      analogous: 'análoga (colores adyacentes en la rueda de color)',
-      triadic: 'triádica (tres colores equidistantes en la rueda de color)',
-      monochromatic: 'monocromática (variaciones del mismo tono)',
-      minimal: 'minimalista, limpia, simple. Usa neutros con un acento.',
-      vibrant: 'vibrante, energética, llamativa. Usa colores saturados y contrastantes.'
+      professional: 'corporate, serious, trustworthy. Use blues, grays, whites.',
+      luxury: 'luxurious, elegant, premium. Use blacks, golds, silvers, deep purples.',
+      retro: 'retro videogame, 8-bit, nostalgic. Use saturated colors typical of the 80s-90s.',
+      kawaii: 'cute, sweet, youthful. Use pinks, pastels, soft colors.',
+      complementary: 'complementary (opposite colors on the color wheel)',
+      analogous: 'analogous (adjacent colors on the color wheel)',
+      triadic: 'triadic (three equidistant colors on the color wheel)',
+      monochromatic: 'monochromatic (variations of the same hue)',
+      minimal: 'minimalist, clean, simple. Use neutrals with one accent.',
+      vibrant: 'vibrant, energetic, striking. Use saturated and contrasting colors.'
     };
 
-    const baseColorInfo = baseColor ? `Color base proporcionado: ${baseColor}` : 'Sin color base. Sugiere colores desde cero.';
+    const baseColorInfo = baseColor ? `Base color provided: ${baseColor}` : 'No base color. Suggest colors from scratch.';
 
-    const prompt = `Eres un experto en diseño y teoría del color. Genera ${count} paletas de colores para el estilo "${style}".
+    const prompt = `You are an expert in design and color theory. Generate ${count} color palettes for the "${style}" style.
 
-Estilo: ${style}
-Descripción: ${styleDescriptions[style]}
+Style: ${style}
+Description: ${styleDescriptions[style]}
 ${baseColorInfo}
 
-${baseColor ? `Debes usar el color ${baseColor} como base o inspiración para algunas paletas.` : ''}
+${baseColor ? `You must use the color ${baseColor} as a base or inspiration for some palettes.` : ''}
 
-IMPORTANTE: Responde ÚNICAMENTE con un objeto JSON válido en este formato exacto:
+IMPORTANT: Respond ONLY with a valid JSON object in this exact format:
 {
   "recommendations": [
     {
-      "name": "Nombre descriptivo de la paleta",
+      "name": "Descriptive palette name",
       "colors": [
         {"hex": "#RRGGBB"},
         {"hex": "#RRGGBB"},
         {"hex": "#RRGGBB"}
       ],
-      "description": "Breve descripción de cuándo usar esta paleta",
-      "useCases": ["Caso de uso 1", "Caso de uso 2"]
+      "description": "Brief description of when to use this palette",
+      "useCases": ["Use case 1", "Use case 2"]
     }
   ]
 }
 
-Reglas:
-- Genera exactamente ${count} paletas diferentes
-- Cada paleta debe tener entre 3-7 colores
-- Los colores deben seguir el estilo "${style}"
-- Los nombres deben ser creativos y descriptivos
-- Las descripciones deben explicar el uso ideal de la paleta
-- NO incluyas texto adicional fuera del JSON
-- NO uses markdown, solo JSON puro
+Rules:
+- Generate exactly ${count} different palettes
+- Each palette must have between 3-7 colors
+- Colors must follow the "${style}" style
+- Names must be creative and descriptive
+- Descriptions must explain the ideal use of the palette
+- DO NOT include any additional text outside the JSON
+- DO NOT use markdown, just pure JSON
 
-Ejemplos de casos de uso:
-- "Sitios web corporativos"
-- "Apps móviles de fintech"
-- "Marcas de moda de lujo"
-- "Videojuegos indie retro"
-- "Interfaces kawaii/cute"`;
+Examples of use cases:
+- "Corporate websites"
+- "Fintech mobile apps"
+- "Luxury fashion brands"
+- "Indie retro videogames"
+- "Kawaii/cute interfaces"`;
 
     try {
       const result = await this.model.generateContent(prompt);
